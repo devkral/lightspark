@@ -82,6 +82,11 @@ public:
 	/* This function must be called within gdk_threads_enter/leave */
 	virtual void grabFocus()=0;
 	virtual void openPageInBrowser(const tiny_string& url, const tiny_string& window)=0;
+
+	GtkWidget* getGTKWidget()
+	{
+		return widget;
+	}
 	static gboolean inputDispatch(GtkWidget *widget, GdkEvent *event, EngineData* e)
 	{
 		RecMutex::Lock l(e->mutex);
