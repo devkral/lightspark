@@ -82,10 +82,10 @@
 using namespace std;
 using namespace lightspark;
 
-static GStaticPrivate is_vm_thread = G_STATIC_PRIVATE_INIT; /* TLS */
+static GPrivate is_vm_thread = G_PRIVATE_INIT (g_free); /* TLS */
 bool lightspark::isVmThread()
 {
-	return g_static_private_get(&is_vm_thread);
+	return g_private_get(&is_vm_thread);
 }
 
 DoABCTag::DoABCTag(RECORDHEADER h, std::istream& in):ControlTag(h)
@@ -1442,7 +1442,7 @@ void ABCVm::Run(ABCVm* th)
 	while(getVm()!=th);
 
 	/* set TLS variable for isVmThread() */
-        g_static_private_set(&is_vm_thread,(void*)1,NULL);
+        g_private_set(&is_vm_thread,(void*)1);
 
 	if(th->m_sys->useJit)
 	{

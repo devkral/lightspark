@@ -52,22 +52,22 @@ extern "C" {
 using namespace std;
 using namespace lightspark;
 
-static GStaticPrivate tls_system = G_STATIC_PRIVATE_INIT;
+static GPrivate tls_system = G_PRIVATE_INIT (g_free); /* TLS */
 SystemState* lightspark::getSys()
 {
-	SystemState* ret = (SystemState*)g_static_private_get(&tls_system);
+	SystemState* ret = (SystemState*)g_private_get(&tls_system);
 	return ret;
 }
 
 void lightspark::setTLSSys(SystemState* sys)
 {
-        g_static_private_set(&tls_system,sys,NULL);
+        g_private_set(&tls_system,sys);
 }
 
-static GStaticPrivate parse_thread_tls = G_STATIC_PRIVATE_INIT; /* TLS */
+static GPrivate parse_thread_tls = G_PRIVATE_INIT (g_free); /* TLS */
 ParseThread* lightspark::getParseThread()
 {
-	ParseThread* pt = (ParseThread*)g_static_private_get(&parse_thread_tls);
+	ParseThread* pt = (ParseThread*)g_private_get(&parse_thread_tls);
 	assert(pt);
 	return pt;
 }
@@ -1266,7 +1266,7 @@ void ParseThread::parseSWFHeader(RootMovieClip *root, UI8 ver)
 
 void ParseThread::execute()
 {
-	g_static_private_set(&parse_thread_tls,this,NULL);
+	g_private_set(&parse_thread_tls,this);
 	try
 	{
 		UI8 Signature[4];

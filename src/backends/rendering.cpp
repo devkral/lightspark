@@ -46,10 +46,10 @@ using namespace std;
 /* calculate FPS every second */
 const Glib::TimeVal RenderThread::FPS_time(/*seconds*/1,/*microseconds*/0);
 
-static GStaticPrivate renderThread = G_STATIC_PRIVATE_INIT; /* TLS */
+static GPrivate renderThread = G_PRIVATE_INIT (g_free); /* TLS */
 RenderThread* lightspark::getRenderThread()
 {
-	RenderThread* ret = (RenderThread*)g_static_private_get(&renderThread);
+	RenderThread* ret = (RenderThread*)g_private_get(&renderThread);
 	/* If this is NULL, then you are not calling from the render thread,
 	 * which is disallowed! (OpenGL is not threadsafe)
 	 */
@@ -326,7 +326,7 @@ void RenderThread::worker()
 {
 	setTLSSys(m_sys);
 	/* set TLS variable for getRenderThread() */
-	g_static_private_set(&renderThread, this, NULL);
+	g_private_set(&renderThread, this);
 
 	ThreadProfile* profile=m_sys->allocateProfiler(RGB(200,0,0));
 	profile->setTag("Render");
