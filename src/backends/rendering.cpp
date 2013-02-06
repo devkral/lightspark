@@ -187,19 +187,21 @@ void RenderThread::handleUpload()
 void createGTKErrorText(EngineData* engineData)
 {
 	gdk_threads_enter();
-
-	GtkWidget* window = engineData->getGTKWidget();
-
-	//This does not work:
+	GtkWidget** widget = engineData->getGTKWidget();
+	GdkWindow* savewindow=gtk_widget_get_window (*widget);
+	//remove former widget
+	//gtk_widget_unparent(*widget);
+	//gtk_widget_unmap(*widget);
+	
 	GtkWidget* label = gtk_button_new_with_label("OpenGL Error!");
-	gtk_container_add( GTK_CONTAINER(window), label);
-	gtk_widget_show( label );
-	gtk_widget_show_all( window );
-
+	
+	gtk_widget_set_parent_window(label,savewindow);
+	gtk_widget_show(label);
+	
 	//This works:
 	GdkColor color;
 	gdk_color_parse ("red", &color);
-	gtk_widget_modify_bg( window, GTK_STATE_NORMAL, &color);
+	gtk_widget_modify_bg(label, GTK_STATE_NORMAL, &color);
 	gdk_threads_leave();
 }
 

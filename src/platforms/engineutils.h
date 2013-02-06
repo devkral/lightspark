@@ -83,9 +83,9 @@ public:
 	virtual void grabFocus()=0;
 	virtual void openPageInBrowser(const tiny_string& url, const tiny_string& window)=0;
 
-	GtkWidget* getGTKWidget()
+	GtkWidget** getGTKWidget()
 	{
-		return widget;
+		return &widget;
 	}
 	static gboolean inputDispatch(GtkWidget *widget, GdkEvent *event, EngineData* e)
 	{
