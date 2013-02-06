@@ -188,9 +188,9 @@ void createGTKErrorText(EngineData* engineData)
 {
 	gdk_threads_enter();
 	GtkWidget** widget = engineData->getGTKWidget();
-	GdkWindow* savewindow=gtk_widget_get_window (*widget);
+	GdkWindow* savewindow=gtk_widget_get_parent_window (*widget);
 	//remove former widget
-	//gtk_widget_unparent(*widget);
+	gtk_widget_unparent(*widget);
 	//gtk_widget_unmap(*widget);
 	
 	GtkWidget* label = gtk_button_new_with_label("OpenGL Error!");
