@@ -188,18 +188,24 @@ void createGTKErrorText(EngineData* engineData)
 {
 	gdk_threads_enter();
 
-	GtkWidget* window = engineData->getGTKWidget();
-
+	GtkWidget* widget = engineData->getGTKWidget();
+	
+	GList *children, *iter;
+	GdkWindow *window;
 	//This does not work:
 	GtkWidget* label = gtk_button_new_with_label("OpenGL Error!");
+	children = gtk_container_get_children(GTK_CONTAINER(widget));
+	for(iter = children; iter != NULL; iter = g_list_next(iter))
+		gtk_widget_destroy(GTK_WIDGET(iter->data));
+	g_list_free(children);
 	gtk_container_add( GTK_CONTAINER(window), label);
 	gtk_widget_show( label );
-	gtk_widget_show_all( window );
+	gtk_widget_show_all( widget );
 
 	//This works:
 	GdkColor color;
 	gdk_color_parse ("red", &color);
-	gtk_widget_modify_bg( window, GTK_STATE_NORMAL, &color);
+	gtk_widget_modify_bg( widget, GTK_STATE_NORMAL, &color);
 	gdk_threads_leave();
 }
 
